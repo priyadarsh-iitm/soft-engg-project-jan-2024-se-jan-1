@@ -40,7 +40,7 @@
                                     Options
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li class="dropdown-item text-center" @click="deleteTicket(t.ticket_id)"> Delete </li>
+                                    <li class="dropdown-item text-center" @click="deleteTicket(t.ticket_id)" style="cursor: pointer;"> Delete </li>
                                     <li class="dropdown-item text-center">
                                         <RouterLink :to="{ name: 'editTicket', params: { ticketId: t.ticket_id } }">
                                             Edit

@@ -11,8 +11,8 @@
                             Sort
                         </button>
                         <ul class="dropdown-menu">
-                            <li class="dropdown-item text-center" @click="sort_upvotes">Number of upvotes</li>
-                            <li class="dropdown-item text-center" @click="sort_time">Time of creation</li>
+                            <li class="dropdown-item text-center" @click="sort_upvotes" style="cursor: pointer;">Number of upvotes</li>
+                            <li class="dropdown-item text-center" @click="sort_time" style="cursor: pointer;">Time of creation</li>
                         </ul>
                     </div>
                 </div>

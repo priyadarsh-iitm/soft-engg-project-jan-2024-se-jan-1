@@ -14,17 +14,14 @@ from werkzeug.exceptions import HTTPException
 from application import index
 import requests
 
-headers = {
-    'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
-    'Api-Username': '21f1005104',
-    'Content-Type': 'application/json'
-}
+
 
 
 class TicketAPI(Resource):
     @token_required
     def get(user,self):
         if(user.role_id==1):
+
             ticket=Ticket.query.filter_by(creator_id=user.user_id).all()
             result=[]
             for t in ticket:
@@ -45,20 +42,41 @@ class TicketAPI(Resource):
         else:
             abort(403,message="You are not authorized to view this page")
     @token_required
-    def post(user,self):
-        if(user.role_id==1):
-            data=request.get_json()
-            ticket=Ticket(title=data['title'],
-                          description=data['description'],
-                          creation_date=datetime.now(),
-                          creator_id=user.user_id,
-                          number_of_upvotes=data['number_of_upvotes'],
-                          is_read=data['is_read'],
-                          is_open=data['is_open'],
-                          is_offensive=data['is_offensive'],
-                          is_FAQ=data['is_FAQ'])
+    def post( user,self):
+        if user.role_id == 1:
+            data = request.get_json()
+                        # Create the post in Discourse
+            discourse_create_topic_url = "http://localhost:4200/posts.json"
+            discourse_payload = {
+                "title": data['title'],
+                "raw": data['description'],
+                "category":4,
+                # "topic_id": ticket.ticket_id,
+                "created_at": datetime.utcnow().isoformat(),
+                }
+            discourse_headers = {
+                'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                'Api-Username':user.user_name
+            }
+            print(discourse_payload)
+            discourse_response = requests.post(discourse_create_topic_url, json=discourse_payload,headers = discourse_headers)
+            print('line 89',discourse_response.json())
+            topic_id = discourse_response.json()['topic_id']
+            
+            
+            ticket = Ticket(title=data['title'],
+                            description=data['description'],
+                            creation_date=datetime.now(),
+                            creator_id=user.user_id,
+                            number_of_upvotes=data['number_of_upvotes'],
+                            is_read=data['is_read'],
+                            is_open=data['is_open'],
+                            is_offensive=data['is_offensive'],
+                            is_FAQ=data['is_FAQ'],
+                            discourse_id = topic_id)
             db.session.add(ticket)
             db.session.commit()
+            # Create the ticket object for indexing (if needed)
             tk_obj = {
                 'objectID': ticket.ticket_id,
                 'ticket_id': ticket.ticket_id,
@@ -74,9 +92,15 @@ class TicketAPI(Resource):
                 'responses': []
             }
             index.save_object(obj=tk_obj)
-            return jsonify({'message':'Ticket created successfully'})
+
+
+            # Check if the post was created successfully in Discourse
+            if discourse_response.status_code == 200:
+                return jsonify({'message': 'Ticket created successfully in both local system and Discourse'})
+            else:
+                return jsonify({'message': f'Ticket created locally but failed to create post in Discourse: {discourse_response.text}'}), discourse_response.status_code
         else:
-            abort(403,message="You are not authorized to view this page")
+            abort(403, message="You are not authorized to create a ticket")
         
     @token_required
     def patch(user, self):
@@ -163,7 +187,24 @@ class TicketAPI(Resource):
                 'responses': [resp.response for resp in ticket.responses]
             }
             index.partial_update_object(obj=tk_obj)
-            return jsonify({"message": "Ticket updated successfully"})
+
+            topic_id = ticket.discourse_id
+            print(topic_id)
+            payload = {
+                "title":ticket.title,
+                "raw":ticket.description
+            }
+            discourse_headers = {
+                'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                'Api-Username':user.user_name
+            }
+            discourse_create_topic_url = f"http://localhost:4200/t/-/{topic_id}.json"
+            # response = requests.put(f"https://localhost:4200/t/-/{topic_id}.json",json = payload,headers = discourse_headers)
+            response = requests.put(discourse_create_topic_url, json=payload,headers = discourse_headers)
+
+            print(response.json())
+            if response.status_code ==200:
+                return jsonify({"message": "Ticket updated successfully"})
         
         else:
             abort(403,message= "You are not authorized to access this!")
@@ -172,6 +213,18 @@ class TicketDelete(Resource):
     @token_required
     def delete(user,self,ticket_id):
         current_ticket = db.session.query(Ticket).filter(Ticket.ticket_id==ticket_id,Ticket.creator_id==user.user_id).first()
+
+        discourse_id = current_ticket.discourse_id
+        print(discourse_id)
+        discourse_headers = {
+                'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                'Api-Username':user.user_name
+            }
+        discourse_url = f"http://localhost:4200/t/{discourse_id}.json"
+        # response = requests.put(f"https://localhost:4200/t/-/{topic_id}.json",json = payload,headers = discourse_headers)
+        response = requests.delete(discourse_url, headers = discourse_headers)
+        # print(response.json())
+
         if current_ticket:
             responses = db.session.query(Response).filter(Response.ticket_id==ticket_id).all()
             if responses:
@@ -216,7 +269,7 @@ class UserAPI(Resource):
             user = User(user_name=user_name, email_id=data['email_id'], password=data['password'], role_id=data['role_id'])
             db.session.add(user)
             db.session.commit()
-
+            print(user)
             # Create user in Discourse
             discourse_data = {
                 'name': user_name,
@@ -227,11 +280,11 @@ class UserAPI(Resource):
                 # 'trust_level':data['role_id']
                 'admin':True
             }
-            # headers = {
-            #     'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
-            #     'Api-Username': '21f1005104',
-            #     'Content-Type': 'application/json'
-            # }
+            headers = {
+                'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                'Api-Username': '21f1005104',
+                'Content-Type': 'application/json'
+            }
             discourse_response = requests.post(f'http://localhost:4200/users.json', json=discourse_data, headers=headers)
             print(discourse_response.json())
             if discourse_response.status_code == 200:
@@ -285,6 +338,11 @@ class UserDelete(Resource):
             print(current_user.user_name)
             uname = current_user.user_name
             print(uname)
+            headers = {
+                'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                'Api-Username': '21f1005104',
+                'Content-Type': 'application/json'
+            }
             if current_user:
                 db.session.delete(current_user)
                 db.session.commit()
