@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 def send_message_to_chat(message):
     url = "https://chat.googleapis.com/v1/spaces/AAAA5nih20g/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=u1QimSgFxbdfxnHZ28eXFDKLrTQEgYWedYZ05bF6FTM"
-    app_message = {"text": message}
+    app_message = {"text": "There is an update on discourse"}
     message_headers = {"Content-Type": "application/json; charset=UTF-8"}
     http_obj = Http()
     response = http_obj.request(
