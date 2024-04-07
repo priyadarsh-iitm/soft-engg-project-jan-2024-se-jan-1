@@ -1,28 +1,26 @@
 <template>
-    <div class="container">
+    <div class="container dark-mode">
         <div class="topic-container">
-            <h3>ADD ADMIN BY EMAIL ID</h3>
+            <h3 style="color: #fff;">ADD ADMIN BY EMAIL ID</h3>
         </div>
         <br />
         <form v-on:submit="addUser">
-            <!-- <div class="row"> -->
-                <!-- <div class="col-md-10"> -->
-                    <div class="form-group"><label>Enter Email ID</label><input type="text" class="form-control" v-model="emailID"  required /></div>
-                <!-- </div> -->
-                <!-- <br />
-                <br />
-                <br />
-                <div class="col-md-10">
-                    <input type="text" class="form-control" v-model="roleID" placeholder="Enter Role" required />
-                </div> -->
-                <br/>
-                <div class="form-group"><label>Enter password</label><input type="password" class="form-control" v-model="password"  required /></div>
-                <br/>
-                <button class="btn btn-lg" type="submit">Submit</button>
+            <div class="form-group">
+                <label style="color: #fff;">Enter Email ID</label>
+                <input type="text" class="form-control" v-model="emailID" required />
+            </div>
+            <br />
+            <div class="form-group">
+                <label style="color: #fff;">Enter password</label>
+                <input type="password" class="form-control" v-model="password" required />
+            </div>
+            <br />
+            <button class="btn btn-lg btn-primary" type="submit">Submit</button>
         </form>
-        <hr/>
+        <hr style="border-color: #555;" />
     </div>
 </template>
+
 <script>
 //import router from '@/router';
 import axios from 'axios';

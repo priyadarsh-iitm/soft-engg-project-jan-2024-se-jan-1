@@ -1,40 +1,42 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm">
-                <h1 class="text-center">Add Ticket</h1>
-        <form @submit.prevent="addCard">
-            <div class="form-group">
-                <label>Title </label>
-                <i class="bi bi-patch-question-fill" data-toggle="tooltip" data-placement="top" title="As you type the title, similar queries will appear on the right. Please read them before creating a new ticket."></i>
-                <input type="text" v-model="title" class="form-control" placeholder="Enter title" autocomplete="off"
-                    required />
+    <div class="container dark-mode">
+        <!-- <div class="row justify-content-center"> -->
+            <div class="col">
+                <h4 class="text-center" style="color: aqua; text-align: center;">Add Ticket</h4>
+                <form @submit.prevent="addCard">
+                    <div class="form-group">
+                        <label style="color: #fff;">Title</label>
+                        <i class="bi bi-patch-question-fill" data-toggle="tooltip" data-placement="top" title="As you type the title, similar queries will appear on the right. Please read them before creating a new ticket."></i>
+                        <input type="text" v-model="title" class="form-control" placeholder="Enter title" autocomplete="off" required />
+                    </div>
+                    <div class="form-group">
+                        <label style="color: #fff;">Description</label>
+                        <textarea v-model="description" class="form-control" placeholder="Enter description" autocomplete="off" required rows='10'></textarea>
+                    </div>
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="postOnDiscourse" v-model="postOnDiscourse" class="form-check-input">
+                        <label for="postOnDiscourse" class="form-check-label" style="color: #fff;">Post on Discourse</label>
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
             </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea v-model="description" class="form-control" placeholder="Enter description" autocomplete="off" required rows='10'></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-            </div>
-            <div class="vr"></div>
             <div class="col-sm">
                 <div class="container overflow-auto">
-                    <p v-if="results"> Please look at the following similar tickets before posting a new query </p>
-                    <div class="search-result" v-for="(result, index) in results"  :key="index">
+                    <p v-if="results" style="color: #fff;">Please look at the following similar tickets before posting a new query</p>
+                    <div class="search-result" v-for="(result, index) in results" :key="index">
                         <h3>
                             <RouterLink :to="{ name: 'response', params: { ticketId: result.ticket_id } }">
-                                <div v-html="result._highlightResult.title.value"></div>
+                                <div v-html="result._highlightResult.title.value" style="color: #fff;"></div>
                             </RouterLink>
                         </h3>
-                        <div v-html="result._highlightResult.description.value"></div>
+                        <div v-html="result._highlightResult.description.value" style="color: #fff;"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    <!-- </div> -->
 </template>
+
   
 <script>
 import axios from "axios";
@@ -45,6 +47,7 @@ export default {
             title: "",
             description: "",
             results: null,
+            postOnDiscourse: false
         };
     },
     watch: {
@@ -76,7 +79,8 @@ export default {
                 is_read: false,
                 is_open: true,
                 is_offensive: false,
-                is_FAQ: false
+                is_FAQ: false,
+                on_discourse: this.postOnDiscourse
             };
             data = JSON.stringify(data);
             console.log(data);

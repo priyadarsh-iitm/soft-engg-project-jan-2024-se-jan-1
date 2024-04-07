@@ -1,33 +1,34 @@
 <template>
-    <div class="container">
+    <div class="container dark-mode">
         <div class="topic-container">
             <div class="row">
-                <p class="ticket-title">{{ title }}</p>
-                <p>{{ description }}</p>
+                <p class="ticket-title" style="color: #fff;"><b>{{ title }}</b></p>
+                <p style="color: #fff;">{{ description }}</p>
             </div>
             <br />
-            <hr />
-            <h3>Responses :</h3>
-            <hr />
+            <hr style="border-color: #fff;" />
+            <h3 style="color: #fff;">Responses :</h3>
+            <hr style="border-color: #fff;" />
             <br />
             <div v-for="r in responses" :key="r.response_id">
-                <p class="response">{{ r.response }}</p>
+                <p class="response" style="color: #fff;">{{ r.response }}</p>
                 <br />
-                <hr />
+                <hr style="border-color: #fff;" />
             </div>
             <form v-on:submit.prevent="addResponse">
                 <div class="row">
                     <div class="col-md-10">
-                        <textarea class="form-control" v-model="response" placeholder="Enter Response" rows="10" required> </textarea>
+                        <textarea class="form-control" v-model="response" placeholder="Enter Response" rows="10" required style="background-color: #333; color: #fff; border-color: #555;"> </textarea>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-success" type="submit">Submit</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </template>
+
 <script>
 import axios from 'axios';
 import { mapGetters } from "vuex";

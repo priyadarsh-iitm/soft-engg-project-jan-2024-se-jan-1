@@ -1,12 +1,14 @@
 <template>
-    <div class = "container">
-        <div class= "topic-container">
-            <h3><RouterLink :to="{name: 'AddAdmins'}">Add Admins</RouterLink></h3>
+    <div class="container dark-mode">
+        <div class="topic-container">
+            <h3 style="color:aqua; text-align: center;">Manager portal</h3>
+            <h3><RouterLink :to="{name: 'AddAdmins'}" style="color: #fff;">Add Admins</RouterLink></h3>
         </div>
         <br/>
-        <hr/>
+        <hr style="border-color: #fff;" />
     </div>
 </template>
+
 <script>
 //import router from '@/router';
 

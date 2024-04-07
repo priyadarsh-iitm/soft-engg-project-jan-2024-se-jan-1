@@ -1,21 +1,18 @@
 <template>
-    <div class="container">
-        <h1 class="text-center">Edit Ticket</h1>
+    <div class="container dark-mode">
+        <h1 class="text-center" style="color: aqua;">Edit Ticket</h1>
         <form @submit.prevent="editCard">
             <div class="form-group">
-                <label>Title</label>
-                <input type="text" v-model="ct" class="form-control" autocomplete="off"
-                    required />
+                <label style="color: #fff;"><b>Title</b></label>
+                <input type="text" v-model="ct" class="form-control" autocomplete="off" required />
             </div>
             <div class="form-group">
-                <label>Description</label>
-                <textarea v-model="cc" class="form-control" autocomplete="off"
-                    required rows="10"> </textarea>
+                <label style="color: #fff;"><b>Description</b></label>
+                <textarea v-model="cc" class="form-control" autocomplete="off" required rows="10"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-success">Submit</button>
         </form>
     </div>
-
 </template>
   
 <script>

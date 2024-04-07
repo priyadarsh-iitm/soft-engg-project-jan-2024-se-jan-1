@@ -1,96 +1,137 @@
 <template>
-    <div class="container">
+    <div class="container dark-mode">
         <div class="topic-container">
             <div class="container" v-for="(category, index) in categories" :key="index">
-                <h3> {{ category  }}</h3>
+                <h3 style="color: #fff;"> {{ category  }}</h3>
                 <br>
                 <div v-for="t in tickets" :key="t.ticket_id">
-               <div class="container" v-if="t.is_approved && t.category==category">
-                <div class="row">
-                    <div class="col-md-10">
-                        <p class="ticket-title">
-                            <RouterLink :to="{ name: 'response', params: { ticketId: t.ticket_id } }">
-                                {{ t.title }}
-                            </RouterLink>
-                        </p>
-                        <p>{{ t.description }}</p>
-                    </div>
-                    <div class="col-md-2">
+                    <div class="container" v-if="t.is_approved && t.category==category">
                         <div class="row">
-                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)">^<br>{{
-                                t.number_of_upvotes }}</button>
-                        </div>
-                        <div class="row" v-if="this.$store.state.role==3">
-                            <div class="btn-group">
-                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                                    Options
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <button class="dropdown-item text-center" @click="removeFromFAQ(t.ticket_id)"> Remove From FAQ </button>
-                                    <button class="dropdown-item text-center" data-bs-toggle="modal" data-bs-target="#faqModal" @click="this.selected_ticket = t.ticket_id; this.selected=t.category"> Change Category </button>
-                                </ul>
+                            <div class="col-md-10">
+                                <p class="ticket-title">
+                                    <RouterLink :to="{ name: 'response', params: { ticketId: t.ticket_id } }" style="color: #fff;">
+                                        {{ t.title }}
+                                    </RouterLink>
+                                </p>
+                                <p style="color: #fff;">{{ t.description }}</p>
                             </div>
-                            <!-- <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#ratingModal" v-if="t.is_open==0" @click="this.selected_ticket=t.ticket_id">Rate Resolution</button> -->
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)"
+                                        style="color: #fff;">^<br>{{ t.number_of_upvotes }}</button>
+                                </div>
+                                <div class="row" v-if="this.$store.state.role==3">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown"
+                                            style="color: #fff;">
+                                            Options
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <button class="dropdown-item text-center" @click="removeFromFAQ(t.ticket_id)"
+                                                style="color: #fff;"> Remove From FAQ </button>
+                                            <button class="dropdown-item text-center" data-bs-toggle="modal"
+                                                data-bs-target="#faqModal" @click="this.selected_ticket = t.ticket_id; this.selected=t.category"
+                                                style="color: #fff;"> Change Category </button>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                        <hr />
                     </div>
                 </div>
-                <hr />
             </div>
         </div>
-            </div>
-               </div>
-        <!-- Modal -->
-<div class="modal fade" id="faqModal" tabindex="-1" aria-labelledby="faqModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="faqModalLabel">Please choose the appropriate category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <select v-model="selected">
-            <option disabled value="">Please select one</option>
-            <option v-for="(c, index) in categories"  :key="index">{{ c }}</option>
-        </select>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="changeCategory()">Submit</button>
-      </div>
     </div>
-  </div>
-</div>
-<div class="container" v-if="this.$store.state.role==3">
-    <div class="text-center">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
-               New Category
+    <!-- Modal -->
+    <div class="modal fade" id="faqModal" tabindex="-1" aria-labelledby="faqModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="faqModalLabel" style="color: #fff;">Please choose the appropriate category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <select v-model="selected" style="color: #000;">
+                        <option disabled value="">Please select one</option>
+                        <option v-for="(c, index) in categories" :key="index">{{ c }}</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="changeCategory()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" v-if="this.$store.state.role==3">
+        <div class="text-center">
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                <b>New Category</b>
             </button>
         </div>
         <!-- Modal -->
-<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="categoryModalLabel">Please add the appropriate category name</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-                <label>Category: </label>
-                <input type="text" v-model="cat" class="form-control" placeholder="Enter Category" autocomplete="off"
-                    required>
+        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="categoryModalLabel" style="color: #fff;">Please add the appropriate category name</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label style="color: #fff;">Category: </label>
+                            <input type="text" v-model="cat" class="form-control" placeholder="Enter Category" autocomplete="off"
+                                required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click=" addCategory()">Submit</button>
+                    </div>
+                </div>
             </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click=" addCategory()">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
+        </div>
     </div>
 </template>
+
+<style>
+.dark-mode {
+    background-color: #222; /* Dark background color */
+    color: #fff; /* White text color */
+}
+
+.heading {
+    color: #fff; /* White text color for button text */
+}
+
+.card {
+    background-color: #333; /* Darker background color for cards */
+    color: #fff; /* White text color for card content */
+}
+
+.form-group label {
+    color: #fff; /* White text color for form labels */
+}
+
+.form-control {
+    background-color: #444; /* Darker background color for form inputs */
+    color: #fff; /* White text color for form inputs */
+    border-color: #555; /* Dark border color for form inputs */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Blue button color */
+    border-color: #007bff; /* Blue border color */
+    color: #fff; /* White text color */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue button color on hover */
+    border-color: #0056b3; /* Darker blue border color on hover */
+}
+</style>
+
 <script>
 import axios from 'axios';
 

@@ -1,19 +1,19 @@
 <template>
-    <div class="container">
-        <h1 class="text-center">Change Password</h1>
+    <div class="container dark-mode">
+        <h1 class="text-center" style="color: #fff;">Change Password</h1>
         <form @submit.prevent="loginUser">
             <div class="form-group">
-                <label>Email</label>
+                <label style="color: #fff;">Email</label>
                 <input type="text" v-model="email" class="form-control" placeholder="Enter Email" autocomplete="off"
                     required />
             </div>
             <div class="form-group">
-                <label>Old Password</label>
+                <label style="color: #fff;">Old Password</label>
                 <input type="password" v-model="oldPassword" class="form-control" placeholder="Password" autocomplete="off"
                     required />
             </div>
             <div class="form-group">
-                <label>New Password</label>
+                <label style="color: #fff;">New Password</label>
                 <input type="password" v-model="newPassword" class="form-control" placeholder="Password" autocomplete="off"
                     required />
             </div>

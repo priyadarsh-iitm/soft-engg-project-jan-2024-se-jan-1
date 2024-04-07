@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="topic-container">
-            <h3>The following tickets have been flagged. </h3>
+            <h3 style="color: aliceblue; text-align: center;"><b>The following tickets have been flagged...</b></h3>
             <br />
             <hr />
             <div class="container" v-for="(t, index) in pending_tickets" :key="index">

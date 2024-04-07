@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container dark-mode">
         <div class="container" style="margin-top: 20px;">
             <p>
                 <button class="btn btn-primary heading" type="button" data-bs-toggle="collapse"
@@ -11,23 +11,25 @@
                 <div class="card card-body">
                     <form v-on:submit="addUser">
                         <div class="form-group">
-                            <label>Enter Email ID</label>
+                            <label style="color: aliceblue;">Enter Email ID</label>
                             <input type="text" class="form-control" v-model="emailID" required />
                         </div>
                         <br />
                         <div class="form-group">
-                            <label>Enter Password</label>
+                            <label style="color: #fff;">Enter Password</label>
                             <input type="password" class="form-control" v-model="password" required />
                         </div>
                         <br />
-                        <div class="form-group"><label>Choose Role</label><select v-model="roleID" class="form-select">
+                        <div class="form-group">
+                            <label style="color: #fff;">Choose Role</label>
+                            <select v-model="roleID" class="form-select" style="color:black;">
                                 <option value="student">Student</option>
                                 <option value="support agent">Support Agent</option>
                                 <option value="admin">Admin</option>
                                 <option value="manager">Manager</option>
                             </select>
                         </div>
-                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <button class="btn btn-success" type="submit">Submit</button>
                     </form>
                 </div>
             </div>
@@ -42,11 +44,11 @@
             </p>
             <div class="collapse" id="collapseExample2">
                 <div class="card card-body">
-                    <label> Please upload a CSV file if you wish to import data</label><br />
+                    <label style="color: #fff;"> Please upload a CSV file if you wish to import data</label><br />
                     <div class="form-group"><input class="btn btn-lg" ref="file" id=file type="file" accept=".csv"
                             v-on:change="onUpload($event)" /></div>
                     <div class="col-md-4">
-                        <button class="btn btn-primary" @click="fileSubmission">Submit</button>
+                        <button class="btn btn-success" @click="fileSubmission">Submit</button>
                     </div>
                 </div>
             </div>
@@ -61,16 +63,53 @@
             </p>
             <div class="collapse" id="collapseExample3">
                 <div class="card card-body">
-                    <div class="form-group"><label>Enter the username you wish to delete</label><input type="text"
+                    <div class="form-group"><label style="color: #fff;">Enter the username you wish to delete</label><input type="text"
                             class="form-control" v-model="username" required /></div>
                     <div class="col-md-4">
-                        <button class="btn btn-primary" type="submit" @click="onDelete">Delete</button>
+                        <button class="btn btn-danger" type="submit" @click="onDelete">Delete</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<style>
+.dark-mode {
+    background-color: #222; /* Dark background color */
+    color: #fff; /* White text color */
+}
+
+.heading {
+    color: #fff; /* White text color for button text */
+}
+
+.card {
+    background-color: #333; /* Darker background color for cards */
+    color: #fff; /* White text color for card content */
+}
+
+.form-group label {
+    color: #fff; /* White text color for form labels */
+}
+
+.form-control {
+    background-color: #444; /* Darker background color for form inputs */
+    color: #fff; /* White text color for form inputs */
+    border-color: #555; /* Dark border color for form inputs */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Blue button color */
+    border-color: #007bff; /* Blue border color */
+    color: #fff; /* White text color */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker blue button color on hover */
+    border-color: #0056b3; /* Darker blue border color on hover */
+}
+</style>
 <script>
 //import router from '@/router';
 import axios from 'axios';

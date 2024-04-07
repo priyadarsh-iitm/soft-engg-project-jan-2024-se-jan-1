@@ -1,24 +1,23 @@
 <template>
-    <div class="container">
+    <div class="container dark-mode">
         <div class="topic-container">
             <div v-for="t in tickets" :key="t.ticket_id">
                 <div class="row">
                     <div class="col-md-10">
                         <p class="ticket-title">
-                            <RouterLink :to="{ name: 'response', params: { ticketId: t.ticket_id } }">
+                            <RouterLink :to="{ name: 'response', params: { ticketId: t.ticket_id } }" style="color: #fff;">
                                 {{ t.title }}
                             </RouterLink>
                         </p>
-                        <p>{{ t.description }}</p>
+                        <p style="color: #ccc;">{{ t.description }}</p>
                     </div>
                     <div class="col-md-2">
                         <div class="row">
-                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)">^<br>{{
-                                t.number_of_upvotes }}</button>
+                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)">^<br>{{ t.number_of_upvotes }}</button>
                         </div>
                     </div>
                 </div>
-                <hr />
+                <hr style="border-color: #555;" />
             </div>
         </div>
     </div>

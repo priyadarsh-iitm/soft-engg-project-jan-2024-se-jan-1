@@ -1,57 +1,48 @@
 <template>
-    <div class="container">
+    <div class="container dark-mode">
+        <h3 style="color:aqua; text-align: center;">MY TICKETS</h3>
         <div class="topic-container">
-            <div  v-for="(t, index) in tickets"  :key="index">
+            <div v-for="(t, index) in tickets" :key="index">
                 <div class="row">
                     <div class="col-md-10">
                         <RouterLink :to="{ name: 'response', params: { ticketId: t.ticket_id } }">
-                            <p class="ticket-title">
-                                {{ t.title }}
-                            </p>
+                            <p class="ticket-title" style="color: #fff;">{{ t.title }}</p>
                         </RouterLink>
                         <div class="btn-grp">
                             <div v-if="t.is_open == 0">
                                 <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Support agent has marked this ticket as closed. To reopen, simply reply with your query">
-                                <button class="btn btn-success btn-sm disabled">Ticket Closed <i class="bi bi-patch-question-fill"></i></button>
+                                    <button class="btn btn-success btn-sm disabled" style="color: #fff;">Ticket Closed <i class="bi bi-patch-question-fill"></i></button>
                                 </span>
                             </div>
                             <div v-else-if="t.is_open==1 && t.is_read==0">
                                 <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="This ticket is still hasn't been read by a support agent. Please wait 48 hours before escalating.">
-                                <button class="btn btn-sm btn-outline-danger disabled">Unread <i class="bi bi-patch-question-fill"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger disabled" style="color: #fff;">Unread <i class="bi bi-patch-question-fill"></i></button>
                                 </span>
                             </div>
                             <div v-if="t.is_open==1 && t.is_read == 1">
                                 <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="A support agent has read your query. Please wait as they will respond shortly">
-                                <button class="btn btn-sm btn-outline-success disabled">Read <i class="bi bi-patch-question-fill"></i></button>
+                                    <button class="btn btn-sm btn-outline-success disabled" style="color: #fff;">Read <i class="bi bi-patch-question-fill"></i></button>
                                 </span>
                             </div>
                         </div>
                         <br/>
-                        <p>{{ t.description }}</p>
+                        <p style="color: #fff;">{{ t.description }}</p>
                     </div>
                     <div class="col-md-2">
                         <div class="row">
-                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)">^<br>{{
-                                t.number_of_upvotes }}</button>
+                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)" style="color: #fff;">^<br>{{ t.number_of_upvotes }}</button>
                         </div>
                         <div class="row">
                             <div class="btn-group">
-                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-                                    Options
-                                </button>
+                                <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" style="color: #fff;">Options</button>
                                 <ul class="dropdown-menu">
-                                    <li class="dropdown-item text-center" @click="deleteTicket(t.ticket_id)" style="cursor: pointer;"> Delete </li>
+                                    <li class="dropdown-item text-center" @click="deleteTicket(t.ticket_id)" style="cursor: pointer;">Delete</li>
                                     <li class="dropdown-item text-center">
-                                        <RouterLink :to="{ name: 'editTicket', params: { ticketId: t.ticket_id } }">
-                                            Edit
-                                        </RouterLink>
+                                        <RouterLink :to="{ name: 'editTicket', params: { ticketId: t.ticket_id } }" style="color: #000;">Edit</RouterLink>
                                     </li>
-                                    <li class="dropdown-item text-center" data-bs-toggle="modal" data-bs-target="#ratingModal" v-if="t.is_open==0" @click="this.selected_ticket=t.ticket_id"> Rate Resolution
-
-                                    </li>
+                                    <li class="dropdown-item text-center" data-bs-toggle="modal" data-bs-target="#ratingModal" v-if="t.is_open==0" @click="this.selected_ticket=t.ticket_id">Rate Resolution</li>
                                 </ul>
                             </div>
-                            <!-- <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#ratingModal" v-if="t.is_open==0" @click="this.selected_ticket=t.ticket_id">Rate Resolution</button> -->
                         </div>
                     </div>
                 </div>
@@ -60,43 +51,34 @@
         </div>
         <div class="text-center">
             <button class="btn btn-primary">
-                <RouterLink to="/addTicket">New Ticket</RouterLink>
+                <RouterLink to="/addTicket" style="color: #000;">New Ticket</RouterLink>
             </button>
         </div>
     </div>
     <!-- Modal -->
-<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="ratingModalLabel"> Please rate the resolution of this ticket</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-    <label for="myChoice1">Very Unhappy<br />
-        <input type="radio" v-model="rating" value="1" id="myChoice1"> 
-    </label>
-    <label for="myChoice2">Unhappy<br />
-        <input type="radio" v-model="rating" value="2" id="myChoice2"> 
-    </label>
-    <label for="myChoice3">Neutral<br />
-        <input type="radio" v-model="rating" value="3" id="myChoice3"> 
-    </label>
-    <label for="myChoice4">Happy<br />
-        <input type="radio" v-model="rating" value="4" id="myChoice4"> 
-    </label>
-    <label for="myChoice5">Very Happy<br />
-        <input type="radio" v-model="rating" value="5" id="myChoice5">
-    </label>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitRating()">Submit</button>
-      </div>
+    <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ratingModalLabel" style="color: #fff;">Please rate the resolution of this ticket</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="myChoice1" style="color: #fff;">Very Unhappy<br /><input type="radio" v-model="rating" value="1" id="myChoice1"></label>
+                    <label for="myChoice2" style="color: #fff;">Unhappy<br /><input type="radio" v-model="rating" value="2" id="myChoice2"></label>
+                    <label for="myChoice3" style="color: #fff;">Neutral<br /><input type="radio" v-model="rating" value="3" id="myChoice3"></label>
+                    <label for="myChoice4" style="color: #fff;">Happy<br /><input type="radio" v-model="rating" value="4" id="myChoice4"></label>
+                    <label for="myChoice5" style="color: #fff;">Very Happy<br /><input type="radio" v-model="rating" value="5" id="myChoice5"></label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitRating()">Submit</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 </template>
+
 <script>
 import axios from "axios";
 export default {

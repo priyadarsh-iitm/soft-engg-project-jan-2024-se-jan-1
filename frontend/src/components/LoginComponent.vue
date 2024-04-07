@@ -1,23 +1,62 @@
 <template>
-  <div class="container">
-    <h1 class="text-center">Login</h1>
+  <div class="container dark-mode">
+    <h1 class="text-center">IITM TICKETING SYSTEM</h1>
+    <h2 class="text-center" style="color:aqua;">Welcome to Login</h2>
     <form @submit.prevent="loginUser">
       <div class="form-group">
-        <label>Email</label>
+        <label style="color: #fff;"><b>Email</b></label>
         <input type="text" v-model="email" class="form-control" placeholder="Enter Email" autocomplete="off" required />
       </div>
       <div class="form-group">
-        <label>Password</label>
+        <label style="color: #fff;"><b>Password</b></label>
         <input type="password" v-model="password" class="form-control" placeholder="Password" autocomplete="off" required />
       </div>
-      <button type="submit" class="btn btn-primary btn">Submit</button>
-
+      <button type="submit" class="btn btn-primary btn-dark">Submit</button>
+      <br>
+      <br>
       <p class="text" style="margin-top:10px">
-        You want to change password?<RouterLink to="/changePassword">Change Password</RouterLink>
+        Forgot Password?<RouterLink to="/changePassword" style="color: #ff4444;"><b>Click Here</b></RouterLink>
       </p>
     </form>
   </div>
 </template>
+
+<style>
+.dark-mode {
+  background-color: #222; /* Dark background color */
+}
+
+.dark-mode h1 {
+  color: #fff; /* White text color */
+}
+
+.dark-mode label {
+  color: #fff; /* White text color */
+}
+
+.dark-mode input[type="text"],
+.dark-mode input[type="password"] {
+  background-color: #333; /* Darker background color for input fields */
+  color: #fff; /* White text color */
+  border-color: #555; /* Dark border color */
+}
+
+.dark-mode .btn-primary {
+  background-color: #007bff; /* Blue button color */
+  border-color: #007bff; /* Blue border color */
+  color: #fff; /* White text color */
+}
+
+.dark-mode .btn-primary:hover {
+  background-color: #0056b3; /* Darker blue button color on hover */
+  border-color: #0056b3; /* Darker blue border color on hover */
+}
+
+.dark-mode .text {
+  color: #fff; /* White text color */
+}
+</style>
+
 
 <script>
 import axios from "axios";

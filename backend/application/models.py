@@ -44,7 +44,7 @@ class Ticket(db.Model):
     creator = db.relationship('User', back_populates='tickets', lazy='subquery')
     rating = db.Column(db.Integer)
     discourse_id = db.Column(db.Integer,nullable = False)
-
+    on_discourse = db.Column(db.Boolean)
 class Category(db.Model):
     category = db.Column(db.String(50), primary_key=True)
 

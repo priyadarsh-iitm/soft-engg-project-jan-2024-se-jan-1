@@ -46,23 +46,26 @@ class TicketAPI(Resource):
         if user.role_id == 1:
             data = request.get_json()
                         # Create the post in Discourse
-            discourse_create_topic_url = "http://localhost:4200/posts.json"
-            discourse_payload = {
-                "title": data['title'],
-                "raw": data['description'],
-                "category":4,
-                # "topic_id": ticket.ticket_id,
-                "created_at": datetime.utcnow().isoformat(),
+            discourse_response={'status_code':200}
+            topic_id = -9
+            if data['on_discourse']:
+                discourse_create_topic_url = "http://localhost:4200/posts.json"
+                discourse_payload = {
+                    "title": data['title'],
+                    "raw": data['description'],
+                    "category":4,
+                    # "topic_id": ticket.ticket_id,
+                    "created_at": datetime.utcnow().isoformat(),
+                    }
+                discourse_headers = {
+                    'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                    'Api-Username':user.user_name
                 }
-            discourse_headers = {
-                'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
-                'Api-Username':user.user_name
-            }
-            print(discourse_payload)
-            discourse_response = requests.post(discourse_create_topic_url, json=discourse_payload,headers = discourse_headers)
-            print('line 89',discourse_response.json())
-            topic_id = discourse_response.json()['topic_id']
-            
+                print(discourse_payload)
+                discourse_response = requests.post(discourse_create_topic_url, json=discourse_payload,headers = discourse_headers)
+                print('line 89',discourse_response.json())
+                topic_id = discourse_response.json()['topic_id']
+                
             
             ticket = Ticket(title=data['title'],
                             description=data['description'],
@@ -73,6 +76,7 @@ class TicketAPI(Resource):
                             is_open=data['is_open'],
                             is_offensive=data['is_offensive'],
                             is_FAQ=data['is_FAQ'],
+                            on_discourse = data['on_discourse'],
                             discourse_id = topic_id)
             db.session.add(ticket)
             db.session.commit()
@@ -95,7 +99,7 @@ class TicketAPI(Resource):
 
 
             # Check if the post was created successfully in Discourse
-            if discourse_response.status_code == 200:
+            if discourse_response['status_code']==200 or discourse_response.status_code == 200 :
                 return jsonify({'message': 'Ticket created successfully in both local system and Discourse'})
             else:
                 return jsonify({'message': f'Ticket created locally but failed to create post in Discourse: {discourse_response.text}'}), discourse_response.status_code
@@ -213,17 +217,17 @@ class TicketDelete(Resource):
     @token_required
     def delete(user,self,ticket_id):
         current_ticket = db.session.query(Ticket).filter(Ticket.ticket_id==ticket_id,Ticket.creator_id==user.user_id).first()
-
-        discourse_id = current_ticket.discourse_id
-        print(discourse_id)
-        discourse_headers = {
-                'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
-                'Api-Username':user.user_name
-            }
-        discourse_url = f"http://localhost:4200/t/{discourse_id}.json"
-        # response = requests.put(f"https://localhost:4200/t/-/{topic_id}.json",json = payload,headers = discourse_headers)
-        response = requests.delete(discourse_url, headers = discourse_headers)
-        # print(response.json())
+        if current_ticket.on_discourse:
+            discourse_id = current_ticket.discourse_id
+            print(discourse_id)
+            discourse_headers = {
+                    'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                    'Api-Username':user.user_name
+                }
+            discourse_url = f"http://localhost:4200/t/{discourse_id}.json"
+            # response = requests.put(f"https://localhost:4200/t/-/{topic_id}.json",json = payload,headers = discourse_headers)
+            response = requests.delete(discourse_url, headers = discourse_headers)
+            # print(response.json())
 
         if current_ticket:
             responses = db.session.query(Response).filter(Response.ticket_id==ticket_id).all()
