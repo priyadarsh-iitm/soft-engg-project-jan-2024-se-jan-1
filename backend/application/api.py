@@ -113,8 +113,8 @@ class TicketAPI(Resource):
             a = None
             try:
                 a = int(args["ticket_id"])
-                #print(a)
-                #print(user.user_id)
+                print(a)
+                print(user.user_id)
             except:
                 abort(400, message = "Please mention the ticketId field in your form")
             ticket = None
@@ -139,6 +139,19 @@ class TicketAPI(Resource):
             try:
                 number_of_upvotes = int(args["number_of_upvotes"])
                 ticket.number_of_upvotes = number_of_upvotes
+                print("LINE 142")
+                headers = {
+                    'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                    'Api-Username':user.user_name
+                }
+
+                payload = {
+                    "id": ticket.discourse_id,
+                    "post_action_type_id": 2,
+                    
+                }
+                response = requests.post(f"http://localhost:4200/post_actions",json = payload, headers = headers)
+                print(response.json())
             except:
                 pass
             is_read = None
@@ -775,6 +788,19 @@ class TicketAll(Resource):
             try:
                 number_of_upvotes = int(args["number_of_upvotes"])
                 ticket.number_of_upvotes = number_of_upvotes
+
+                headers = {
+                    'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                    'Api-Username':user.user_name
+                }
+
+                payload = {
+                    "id": ticket.discourse_id,
+                    "post_action_type_id": 2,
+                    
+                }
+                response = requests.post(f"http://localhost:4200/post_actions",json = payload, headers = headers)
+                print(response.json())
             except:
                 pass
             is_read = None

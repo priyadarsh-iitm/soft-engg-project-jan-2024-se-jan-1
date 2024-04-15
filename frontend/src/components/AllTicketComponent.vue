@@ -13,7 +13,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="row">
-                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)">^<br>{{ t.number_of_upvotes }}</button>
+                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)">Vote<br>{{ t.number_of_upvotes }}</button>
                         </div>
                     </div>
                 </div>

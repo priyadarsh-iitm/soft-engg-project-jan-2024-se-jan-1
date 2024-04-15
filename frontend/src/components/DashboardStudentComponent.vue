@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="row">
-                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)" style="color: #fff;">^<br>{{ t.number_of_upvotes }}</button>
+                            <button class="btn upvote" @click="increaseVote(t.ticket_id, t.number_of_upvotes)" style="color: #fff;">Vote<br>{{ t.number_of_upvotes }}</button>
                         </div>
                         <div class="row">
                             <div class="btn-group">
