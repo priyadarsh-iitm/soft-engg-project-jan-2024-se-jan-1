@@ -76,6 +76,7 @@ export default {
                 this.editOpen();
                 this.response = "";
                 this.$router.go();
+                this.$router.push("/dashboard");
                 console.log(res);
             }).catch((err) => {
                 console.log(err);

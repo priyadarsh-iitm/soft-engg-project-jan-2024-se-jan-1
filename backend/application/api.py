@@ -99,7 +99,7 @@ class TicketAPI(Resource):
 
 
             # Check if the post was created successfully in Discourse
-            if discourse_response['status_code']==200 or discourse_response.status_code == 200 :
+            if discourse_response.status_code == 200 :
                 return jsonify({'message': 'Ticket created successfully in both local system and Discourse'})
             else:
                 return jsonify({'message': f'Ticket created locally but failed to create post in Discourse: {discourse_response.text}'}), discourse_response.status_code
@@ -282,7 +282,7 @@ class UserAPI(Resource):
                 'password': data['password'],
                 'active': True,  # You can adjust this based on your requirements
                 # 'trust_level':data['role_id']
-                'admin':True
+                # 'admin':True
             }
             headers = {
                 'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
@@ -290,7 +290,20 @@ class UserAPI(Resource):
                 'Content-Type': 'application/json'
             }
             discourse_response = requests.post(f'http://localhost:4200/users.json', json=discourse_data, headers=headers)
+            if(data['role_id']==2 or data['role_id']==3):
+
+                response = requests.put(f"http://localhost:4200/admin/users/{discourse_response.json()['user_id']}/grant_moderation",
+                                        headers = headers)
+      
+
+            if(data['role_id']==3):
+                payload = {'level':4}
+                response = requests.put(f"http://localhost:4200/admin/users/{discourse_response.json()['user_id']}/trust_level",
+                                    headers = headers,json = payload)
+            print(response.json())
+
             print(discourse_response.json())
+
             if discourse_response.status_code == 200:
                 return jsonify({'message': 'User created successfully'})
             else:
@@ -521,8 +534,9 @@ class getResponseAPI_by_ticket(Resource):
 class ResponseAPI_by_ticket(Resource):
     @token_required
     def post(user, self):
-        if user.role_id == 1 or user.role_id == 2:
+        if user.role_id == 1 or user.role_id == 2  or user.role_id == 3:
             args = request.get_json(force = True)
+            print("line ",args)
             ticket_id = None
             try:
                 ticket_id = args["ticket_id"]
@@ -546,7 +560,24 @@ class ResponseAPI_by_ticket(Resource):
                     },
                     'objectID': ticket_obj.ticket_id
                 })
-                if user.role_id == 2 or (user.role_id==1 and user.user_id != ticket_obj.creator_id):
+
+
+                if user.role_id ==3 or user.role_id == 2 or (user.role_id==1 and user.user_id != ticket_obj.creator_id):
+
+                    #discourse reply
+                    headers = {
+                    'Api-Key': 'a7d557f8eccc7f587756c5038a51064b7dc1c882929c03000dab8ad013165247',
+                    'Api-Username': user.user_name,
+                    'Content-Type': 'application/json'
+                    }
+                    payload = {
+                    "raw": response,
+                    "topic_id": ticket_obj.discourse_id
+
+                    }
+
+                    response = requests.post("http://localhost:4200/posts.json",json = payload,headers = headers)
+                    print(response.json())
                     tk = {'title': ticket_obj.title, 'ticket_id': ticket_obj.ticket_id, 'creator_id': ticket_obj.creator_id, 'creator_email': ticket_obj.creator.email_id}
                     rp = {'responder_id': response_obj.responder_id, 'response': response_obj.response, 'response_id': response_obj.response_id, 'responder_uname': response_obj.responder.user_name}
                     send_notification = chain(response_notification.s(ticket_obj = tk, response_obj=rp), send_email.s()).apply_async()

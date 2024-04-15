@@ -15,9 +15,9 @@
                         <router-link to="/allTicket" class="nav-link active" aria-current="page"><b>All
                             Tickets</b></router-link>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <router-link to="/faq" class="nav-link active" aria-current="page"><b>FAQ</b></router-link>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a href="http://localhost:4200/" class="nav-link active" aria-current="page"
                             target="_blank"><b>Discourse</b></a>
