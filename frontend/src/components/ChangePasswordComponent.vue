@@ -3,21 +3,21 @@
         <h1 class="text-center" style="color: #fff;">Change Password</h1>
         <form @submit.prevent="loginUser">
             <div class="form-group">
-                <label style="color: #fff;">Email</label>
+                <label style="color: #fff;"><b>Email</b></label>
                 <input type="text" v-model="email" class="form-control" placeholder="Enter Email" autocomplete="off"
                     required />
             </div>
             <div class="form-group">
-                <label style="color: #fff;">Old Password</label>
+                <label style="color: #fff;"><b>Old Password</b></label>
                 <input type="password" v-model="oldPassword" class="form-control" placeholder="Password" autocomplete="off"
                     required />
             </div>
             <div class="form-group">
-                <label style="color: #fff;">New Password</label>
+                <label style="color: #fff;"><b>New Password</b></label>
                 <input type="password" v-model="newPassword" class="form-control" placeholder="Password" autocomplete="off"
                     required />
             </div>
-            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+            <button type="submit" class="btn btn-primary btn-dark">Submit</button>
         </form>
     </div>
 </template>
