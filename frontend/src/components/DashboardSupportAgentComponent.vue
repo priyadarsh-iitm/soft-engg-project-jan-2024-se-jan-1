@@ -3,7 +3,7 @@
         <div class="topic-container">
             <div class="row">
                 <div class="col-md-10">
-                    <h3 style="color: aqua; text-align: center;">Suppport Agent portal</h3>
+                    <h3 style="color: aqua; text-align: center;">Support Agent portal</h3>
                 </div>
                 <div class="col-md-2">
                     <div class="btn-group">
